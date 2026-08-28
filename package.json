@@ -1,0 +1,8 @@
+{
+  "name": "diet-soda-landing-page",
+  "version": "1.0.0",
+  "description": "3D interactive soda landing page",
+  "scripts": {
+    "dev": "serve ."
+  }
+}
