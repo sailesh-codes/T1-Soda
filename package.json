@@ -1,7 +1,0 @@
-{
-  "name": "t1-soda",
-  "version": "1.0.0",
-  "scripts": {
-    "build": "echo 'Static build ready'"
-  }
-}

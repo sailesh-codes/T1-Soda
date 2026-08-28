@@ -1,11 +1,11 @@
 {
-  "version": 2,
-  "public": true,
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
+  "trailingSlash": false,
   "rewrites": [
     {
-      "source": "/(.*)",
-      "destination": "/$1"
+      "source": "/",
+      "destination": "/index.html"
     }
   ]
 }
