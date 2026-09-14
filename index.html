@@ -3,13 +3,15 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Diet Soda | Pure Zero Refreshment</title>
     <meta name="description" content="Experience the crisp, clean taste of Diet Soda. Zero sugar, zero compromise.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&family=Inter:wght@400;500&family=Manrope:wght@400;700&family=Galada&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&family=Inter:wght@400;500;600&family=Manrope:wght@400;500;700&family=Galada&display=swap"
         rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
@@ -18,9 +20,9 @@
             --bg-color: #0a0a0a;
             --text-color: #ffffff;
             --accent-color: #ffffff;
-            --muted-color: rgba(255, 255, 255, 0.7);
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
+            --muted-color: rgba(255, 255, 255, 0.75);
+            --glass-bg: rgba(255, 255, 255, 0.06);
+            --glass-border: rgba(255, 255, 255, 0.14);
             --font-main: 'Inter', sans-serif;
             --font-heading: 'Galada', cursive;
 
@@ -30,10 +32,18 @@
             --bg-outer: #011411;
         }
 
-        * {
+        *, *::before, *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            width: 100%;
+            min-height: 100%;
+            min-height: 100dvh;
+            overflow-x: hidden;
         }
 
         body {
@@ -41,9 +51,11 @@
             color: var(--text-color);
             font-family: var(--font-main);
             overflow: hidden;
-            /* Remove scroll */
             height: 100vh;
+            height: 100dvh;
             transition: background 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         body.blue-theme {
@@ -52,7 +64,7 @@
             --bg-outer: #010c14;
         }
 
-        /* Bubbles container */
+        /* Ambient bubbles container */
         #bubbles-container {
             position: fixed;
             top: 0;
@@ -60,31 +72,29 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 0;
+            z-index: 1;
             overflow: hidden;
         }
 
         .bubble-img {
             position: absolute;
             pointer-events: none;
+            will-change: transform, opacity;
         }
 
         @keyframes floatUpImg {
             0% {
-                transform: translateY(0) translateX(0) rotate(0deg);
+                transform: translate3d(0, 0, 0) rotate(0deg);
                 opacity: 0;
             }
-
             10% {
-                opacity: 0.4;
+                opacity: 0.45;
             }
-
-            90% {
-                opacity: 0.4;
+            85% {
+                opacity: 0.45;
             }
-
             100% {
-                transform: translateY(-110vh) translateX(30px) rotate(360deg);
+                transform: translate3d(30px, -115vh, 0) rotate(360deg);
                 opacity: 0;
             }
         }
@@ -94,27 +104,37 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 2rem 4%;
+            padding: max(1.2rem, env(safe-area-inset-top, 1.2rem)) max(3.5%, env(safe-area-inset-right, 1.5rem)) 0.8rem max(3.5%, env(safe-area-inset-left, 1.5rem));
             position: fixed;
             top: 0;
+            left: 0;
             width: 100%;
-            z-index: 100;
+            z-index: 120;
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.6rem;
             font-weight: 700;
-            font-size: 1.2rem;
+            font-size: clamp(1.15rem, 2vw, 1.35rem);
             font-family: var(--font-heading);
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+            z-index: 125;
         }
 
+        .logo svg {
+            flex-shrink: 0;
+        }
+
+        /* Desktop Nav */
         .nav {
             display: flex;
-            gap: 0.5rem;
+            gap: 0.35rem;
             background: var(--glass-bg);
-            padding: 0.4rem;
+            padding: 0.35rem;
             border-radius: 100px;
             border: 1px solid var(--glass-border);
         }
@@ -122,8 +142,8 @@
         .nav.glass {
             position: relative;
             background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
         }
@@ -134,9 +154,10 @@
             text-decoration: none;
             font-size: 0.85rem;
             font-weight: 500;
-            padding: 0.5rem 1.2rem;
+            padding: 0.5rem 1.15rem;
             border-radius: 100px;
             transition: all 0.3s ease;
+            white-space: nowrap;
         }
 
         .nav-item:hover,
@@ -146,178 +167,339 @@
         }
 
         .contact-btn {
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.55);
             color: white;
-            border: none;
-            padding: 0.9rem 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 0.75rem 1.8rem;
             border-radius: 100px;
             font-weight: 600;
             font-size: 0.85rem;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: none;
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            white-space: nowrap;
         }
 
         .contact-btn:hover {
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.75);
             transform: translateY(-2px);
-            box-shadow: none;
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Mobile Hamburger Button */
+        .mobile-menu-btn {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            width: 44px;
+            height: 44px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            cursor: pointer;
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            z-index: 125;
+            transition: all 0.25s ease;
+        }
+
+        .mobile-menu-btn:hover {
+            background: rgba(255, 255, 255, 0.18);
+        }
+
+        .mobile-menu-btn:active {
+            transform: scale(0.94);
+        }
+
+        .mobile-menu-btn span {
+            display: block;
+            width: 18px;
+            height: 2px;
+            background-color: white;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        /* Mobile Slide-in Drawer */
+        .mobile-drawer {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: min(85vw, 340px);
+            height: 100%;
+            height: 100dvh;
+            background: rgba(2, 22, 18, 0.95);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border-left: 1px solid var(--glass-border);
+            z-index: 250;
+            display: flex;
+            flex-direction: column;
+            padding: max(1.5rem, env(safe-area-inset-top, 1.5rem)) 1.75rem max(2rem, env(safe-area-inset-bottom, 2rem));
+            transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: -15px 0 50px rgba(0, 0, 0, 0.6);
+        }
+
+        body.blue-theme .mobile-drawer {
+            background: rgba(2, 14, 25, 0.95);
+        }
+
+        .mobile-drawer.open {
+            right: 0;
+        }
+
+        .drawer-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            z-index: 240;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.35s ease;
+        }
+
+        .drawer-backdrop.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .drawer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .drawer-close-btn {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: white;
+            font-size: 1.8rem;
+            line-height: 1;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .drawer-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .drawer-nav-item {
+            color: var(--muted-color);
+            text-decoration: none;
+            font-size: 1.15rem;
+            font-weight: 500;
+            font-family: 'Manrope', sans-serif;
+            padding: 0.75rem 1rem;
+            border-radius: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .drawer-nav-item.active,
+        .drawer-nav-item:hover {
+            background: #fbcfe8;
+            color: #011d17;
+        }
+
+        .drawer-contact-btn {
+            margin-top: auto;
+            width: 100%;
+            text-align: center;
+            padding: 0.95rem;
         }
 
         /* Hero */
         .hero {
             height: 100vh;
+            height: 100dvh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 0 4%;
-            padding-top: 5rem;
+            padding: 0 max(3.5%, env(safe-area-inset-right, 1.5rem)) max(1.5rem, env(safe-area-inset-bottom, 1.5rem)) max(3.5%, env(safe-area-inset-left, 1.5rem));
+            padding-top: max(5rem, calc(env(safe-area-inset-top, 0px) + 4.5rem));
+            position: relative;
+            overflow: hidden;
         }
 
         .hero-content {
             display: flex;
             justify-content: space-between;
             align-items: stretch;
-            /* Stretch columns to full height */
             width: 100%;
-            max-width: 100%;
-            padding: 0;
+            max-width: 1600px;
             height: 100%;
             position: relative;
+            margin: 0 auto;
         }
 
         /* Typography */
-        .main-title,
-        .side-title {
+        .main-title {
             font-family: var(--font-heading);
-            font-size: clamp(5rem, 10vw, 12rem);
-            line-height: 0.8;
+            font-size: clamp(3.6rem, 7.5vw, 9.5rem);
+            line-height: 0.85;
             font-weight: 400;
             text-transform: none;
-            white-space: nowrap;
             color: white;
             letter-spacing: normal;
+        }
+
+        .side-title {
+            font-family: var(--font-heading);
+            font-size: clamp(2.8rem, 5.8vw, 7.5rem);
+            line-height: 0.88;
+            font-weight: 400;
+            text-transform: none;
+            color: white;
+            letter-spacing: normal;
+            align-self: flex-end;
+            text-align: right;
         }
 
         .outline {
             color: var(--text-color);
         }
 
-        /* Leaves */
-        .leaves-container {
+        /* Decorative Leaves & Berries Containers */
+        .leaves-container,
+        .berries-container,
+        .berries-container-bg {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none;
-            z-index: -1;
-            /* Even further behind */
-            transition: transform 0.1s ease-out;
+            pointer-events: none !important;
+            will-change: transform;
+        }
+
+        .leaves-container {
+            z-index: 2;
+        }
+
+        .berries-container-bg {
+            z-index: 3;
+        }
+
+        .berries-container {
+            z-index: 20;
+        }
+
+        .leaf,
+        .berry {
+            position: absolute;
+            pointer-events: none !important;
+            outline: none;
+            --progress-bar-color: transparent;
+            will-change: transform;
         }
 
         .leaf {
-            position: absolute;
-            width: 60px;
-            height: 60px;
-            pointer-events: none;
-            z-index: -1;
-            filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.2));
+            filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.25));
         }
 
-        .l1 {
-            top: 10%;
-            left: 15%;
+        .berry {
+            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.35));
         }
 
-        .l2 {
-            top: 40%;
-            left: 80%;
-            width: 140px;
-            height: 140px;
-            opacity: 0.4;
-        }
+        /* Desktop leaves positions */
+        .l1 { top: 12%; left: 14%; width: clamp(40px, 4.5vw, 65px); height: clamp(40px, 4.5vw, 65px); }
+        .l2 { top: 38%; left: 86%; width: clamp(70px, 8vw, 130px); height: clamp(70px, 8vw, 130px); opacity: 0.45; }
+        .l3 { top: 72%; left: 80%; width: clamp(50px, 5.5vw, 85px); height: clamp(50px, 5.5vw, 85px); }
+        .l4 { top: 86%; left: 16%; width: clamp(60px, 7vw, 110px); height: clamp(60px, 7vw, 110px); opacity: 0.35; }
 
-        .l3 {
-            top: 70%;
-            left: 75%;
-            width: 80px;
-            height: 80px;
-        }
-
-        .l4 {
-            top: 85%;
-            left: 20%;
-            width: 120px;
-            height: 120px;
-            opacity: 0.3;
-        }
+        /* Desktop berry positions (placed to frame the can, NOT cover text or cards) */
+        .b1 { top: 22%; left: 24%; width: clamp(100px, 11vw, 170px); height: clamp(100px, 11vw, 170px); }
+        .b2 { top: 58%; left: 34%; width: clamp(60px, 6vw, 95px); height: clamp(60px, 6vw, 95px); }
+        .b3 { top: 20%; left: 74%; width: clamp(110px, 12vw, 180px); height: clamp(110px, 12vw, 180px); }
+        .b4 { top: 12%; left: 52%; width: clamp(70px, 7.5vw, 115px); height: clamp(70px, 7.5vw, 115px); }
+        .b5 { top: 74%; left: 22%; width: clamp(70px, 7.5vw, 110px); height: clamp(70px, 7.5vw, 110px); }
+        .b6 { top: 52%; left: 84%; width: clamp(90px, 9.5vw, 145px); height: clamp(90px, 9.5vw, 145px); }
+        .b7 { top: 16%; left: 38%; width: clamp(45px, 4.5vw, 70px); height: clamp(45px, 4.5vw, 70px); opacity: 0.7; }
+        .b8 { top: 48%; left: 62%; width: clamp(40px, 4vw, 65px); height: clamp(40px, 4vw, 65px); opacity: 0.6; }
+        .b9 { top: 82%; left: 38%; width: clamp(45px, 4.5vw, 70px); height: clamp(45px, 4.5vw, 70px); opacity: 0.7; }
 
         /* Left column */
         .hero-left {
             display: flex;
             flex-direction: column;
+            justify-content: space-between;
             height: 100%;
-            padding: 6rem 0;
-            gap: 2rem;
-            z-index: 100;
-        }
-
-        @keyframes fadeInEntry {
-            to {
-                opacity: 1;
-                transform: none;
-            }
+            padding: clamp(2rem, 5vh, 5.5rem) 0;
+            z-index: 50;
+            pointer-events: auto;
+            position: relative;
         }
 
         .description {
             color: var(--muted-color);
-            font-size: 1.1rem;
+            font-size: clamp(0.9rem, 1.15vw, 1.12rem);
             line-height: 1.6;
-            max-width: 400px;
+            max-width: min(390px, 90vw);
         }
 
         .primary-btn {
             display: flex;
             align-items: center;
-            gap: 1.5rem;
-            background: rgba(0, 0, 0, 0.5);
+            gap: 1.25rem;
+            background: rgba(0, 0, 0, 0.55);
             color: white;
-            border: none;
-            padding: 0.4rem 0.4rem 0.4rem 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 0.4rem 0.4rem 0.4rem 1.4rem;
             border-radius: 100px;
             font-weight: 700;
+            font-size: clamp(0.85rem, 1vw, 1rem);
             cursor: pointer;
             width: fit-content;
-            transition: all 0.3s ease;
-            box-shadow: none;
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
         .primary-btn:hover {
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.75);
             transform: translateY(-3px);
-            box-shadow: none;
+            border-color: rgba(255, 255, 255, 0.3);
         }
 
         .plus-icon {
             background: #fbcfe8;
             color: #011d17;
-            width: 38px;
-            height: 38px;
+            width: 36px;
+            height: 36px;
             display: flex;
             align-items: center;
             justify-content: center;
             border-radius: 50%;
-            font-size: 1.4rem;
+            font-size: 1.35rem;
             font-weight: 900;
             line-height: 1;
             padding-bottom: 2px;
-            /* Compensate for baseline shift */
             border: none;
+            transition: transform 0.3s ease;
         }
 
+        .primary-btn:hover .plus-icon {
+            transform: rotate(90deg);
+        }
 
-        /* Center product */
+        /* Center product 3D Can */
         .hero-center {
             display: flex;
             justify-content: center;
@@ -327,11 +509,11 @@
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 1;
+            z-index: 10;
             opacity: 0;
             animation: fadeIn 1.5s ease-out 0.3s forwards, float 6s ease-in-out infinite;
             pointer-events: none;
-            background: radial-gradient(circle at center, rgba(16, 185, 129, 0.1) 0%, transparent 70%);
+            background: radial-gradient(circle at center, rgba(16, 185, 129, 0.12) 0%, transparent 70%);
         }
 
         @keyframes fadeIn {
@@ -341,138 +523,27 @@
         }
 
         @keyframes float {
-
-            0%,
-            100% {
-                transform: translateY(0);
+            0%, 100% {
+                transform: translate3d(0, 0, 0);
             }
-
             50% {
-                transform: translateY(-20px);
+                transform: translate3d(0, -18px, 0);
             }
         }
 
         .main-product-3d {
-            width: 80vw;
-            height: 80vh;
+            width: clamp(320px, 42vw, 600px);
+            height: clamp(380px, 70vh, 780px);
             outline: none;
             --progress-bar-color: transparent;
             --poster-color: transparent;
-            z-index: 1;
+            z-index: 10;
             position: fixed;
-            top: 50%;
-            left: 50%;
+            top: 48%;
+            left: 48%;
             transform: translate(-50%, -50%) rotate(25deg);
             pointer-events: none;
-        }
-
-        .main-product-3d[camera-controls] {
-            pointer-events: auto;
-        }
-
-        /* Berries */
-        .berries-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 110;
-            /* Above text (100) and can (50) */
-            transition: transform 0.1s ease-out;
-        }
-
-        .berries-container-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-            /* Behind everything */
-            transition: transform 0.1s ease-out;
-        }
-
-        .berry {
-            position: absolute;
-            width: 120px;
-            height: 120px;
-            outline: none;
-            --progress-bar-color: transparent;
-            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
-            transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
-
-        .berry.no-animation {
-            animation: none !important;
-        }
-
-        .b1 {
-            top: 25%;
-            left: 30%;
-            width: 220px;
-            height: 220px;
-        }
-
-        .b2 {
-            top: 60%;
-            left: 42%;
-            width: 100px;
-            height: 100px;
-        }
-
-        .b3 {
-            top: 30%;
-            left: 62%;
-            width: 250px;
-            height: 250px;
-        }
-
-        .b4 {
-            top: 15%;
-            left: 48%;
-            width: 140px;
-            height: 140px;
-        }
-
-        .b5 {
-            top: 75%;
-            left: 20%;
-            width: 120px;
-            height: 120px;
-        }
-
-        .b6 {
-            top: 45%;
-            left: 75%;
-            width: 180px;
-            height: 180px;
-        }
-
-        .b7 {
-            top: 15%;
-            left: 40%;
-            width: 80px;
-            height: 80px;
-            opacity: 0.7;
-        }
-
-        .b8 {
-            top: 50%;
-            left: 55%;
-            width: 70px;
-            height: 70px;
-            opacity: 0.6;
-        }
-
-        .b9 {
-            top: 80%;
-            left: 35%;
-            width: 75px;
-            height: 75px;
-            opacity: 0.7;
+            will-change: transform;
         }
 
         /* Right column */
@@ -483,85 +554,84 @@
             align-items: flex-end;
             text-align: right;
             height: 100%;
-            padding: 6rem 0;
-            z-index: 100;
-            width: 450px;
-            pointer-events: none;
-        }
-
-        @keyframes fadeInLeft {
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+            padding: clamp(2rem, 5vh, 5.5rem) 0;
+            z-index: 50;
+            width: auto;
+            max-width: 480px;
+            pointer-events: auto;
+            position: relative;
         }
 
         .product-carousel {
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
+            gap: 1.25rem;
             align-items: flex-end;
             pointer-events: auto;
-            /* Enable interaction */
         }
 
         .carousel-cards {
             display: flex;
             gap: 1rem;
+            pointer-events: auto;
         }
 
         .card {
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
-            padding: 1rem;
-            padding-top: 5rem;
-            border-radius: 28px;
+            padding: 0.85rem;
+            padding-top: 4.5rem;
+            border-radius: 26px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 1.5rem;
+            gap: 1.1rem;
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            width: 135px;
+            width: clamp(110px, 9vw, 135px);
             position: relative;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             text-align: center;
+            user-select: none;
+            z-index: 55;
         }
 
         .card:hover {
             background: rgba(255, 255, 255, 0.12);
             border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-4px);
         }
 
         .card.active {
             border-color: #fbcfe8;
-            border-width: 1px;
-            background: var(--glass-bg);
-            box-shadow: none;
+            border-width: 1.5px;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
         }
 
         .card img {
-            width: 140px;
+            width: clamp(105px, 10vw, 140px);
             height: auto;
-            margin-top: -8rem;
+            margin-top: -7.5rem;
             filter: drop-shadow(0 20px 35px rgba(0, 0, 0, 0.5));
             transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
             display: block;
             will-change: transform;
             pointer-events: none;
-            /* Mouse passes through image to trigger card hover */
         }
 
         .card:hover img {
-            transform: translateY(-30px) rotate(-12deg) scale(1.15) !important;
+            transform: translateY(-24px) rotate(-10deg) scale(1.12) !important;
         }
 
         .card-info {
             display: flex;
             flex-direction: column;
-            font-size: 0.7rem;
+            font-size: 0.72rem;
             width: 100%;
             word-wrap: break-word;
+            gap: 2px;
         }
 
         .card-info span:first-child {
@@ -574,7 +644,9 @@
 
         .carousel-nav {
             display: flex;
-            gap: 1rem;
+            gap: 0.75rem;
+            pointer-events: auto;
+            z-index: 55;
         }
 
         .nav-arrow {
@@ -588,58 +660,304 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background 0.3s;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
         }
 
         .nav-arrow:hover {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.18);
+            transform: scale(1.08);
+            border-color: rgba(255, 255, 255, 0.35);
         }
 
-        .side-title {
-            align-self: flex-end;
-            text-align: right;
+        .nav-arrow:active {
+            transform: scale(0.95);
         }
 
-        @keyframes shine {
-            from {
-                transform: translateX(-100%) rotate(45deg);
+        /* Large Displays (> 1600px) */
+        @media (min-width: 1600px) {
+            .hero-content {
+                max-width: 1600px;
             }
 
-            to {
-                transform: translateX(200%) rotate(45deg);
+            .main-title {
+                font-size: clamp(6.5rem, 7.5vw, 11rem);
+            }
+
+            .side-title {
+                font-size: clamp(6rem, 7vw, 10rem);
             }
         }
 
-        /* Responsive */
-        @media (max-width: 1200px) {
+        /* Laptops & Landscape Tablets (992px to 1200px) */
+        @media (max-width: 1200px) and (min-width: 992px) {
+            .header {
+                padding: 1.1rem 3%;
+            }
+
+            .nav-item {
+                padding: 0.45rem 0.85rem;
+                font-size: 0.8rem;
+            }
+
+            .contact-btn {
+                padding: 0.7rem 1.4rem;
+                font-size: 0.8rem;
+            }
+
+            .main-title {
+                font-size: clamp(3.2rem, 6.5vw, 5.2rem);
+            }
+
+            .side-title {
+                font-size: clamp(2.8rem, 5.8vw, 4.8rem);
+            }
+
             .main-product-3d {
-                width: 100vw;
-                height: 60vh;
-                top: 40%;
+                width: clamp(300px, 42vw, 460px);
+                height: clamp(360px, 58vh, 560px);
+            }
+
+            .description {
+                max-width: 270px;
+                font-size: 0.95rem;
+            }
+        }
+
+        /* Mobile Phones & Portrait Tablets (<= 991px) */
+        @media (max-width: 991px) {
+            body {
+                overflow-y: auto;
+                overflow-x: hidden;
+                height: auto;
+                min-height: 100vh;
+                min-height: 100dvh;
+            }
+
+            /* Toggle desktop and mobile nav controls */
+            .nav.glass {
+                display: none !important;
+            }
+
+            .header > .contact-btn {
+                display: none !important;
+            }
+
+            .mobile-menu-btn {
+                display: flex !important;
+            }
+
+            .header {
+                padding: max(0.85rem, env(safe-area-inset-top, 0.85rem)) max(1.2rem, env(safe-area-inset-right, 1.2rem)) 0.65rem max(1.2rem, env(safe-area-inset-left, 1.2rem));
+            }
+
+            .hero {
+                min-height: 100dvh;
+                height: auto;
+                padding: 0 max(1.2rem, env(safe-area-inset-right, 1.2rem)) max(1.5rem, env(safe-area-inset-bottom, 1.5rem)) max(1.2rem, env(safe-area-inset-left, 1.2rem));
+                padding-top: max(4.5rem, calc(env(safe-area-inset-top, 0px) + 3.8rem));
+                align-items: flex-start;
             }
 
             .hero-content {
-                grid-template-columns: 1fr;
-                padding-top: 8rem;
+                flex-direction: column;
+                justify-content: space-between;
+                align-items: center;
+                min-height: calc(100dvh - 5.5rem);
+                height: auto;
+                gap: 1.25rem;
+                position: relative;
+            }
+
+            /* Top Section on Mobile */
+            .hero-left {
+                padding: 0.25rem 0 0 0;
+                height: auto;
+                width: 100%;
+                align-items: center;
+                text-align: center;
+                gap: 0.6rem;
+                z-index: 50;
+            }
+
+            .main-title {
+                font-size: clamp(2.4rem, 10vw, 4.2rem);
+                line-height: 0.92;
+                text-align: center;
+            }
+
+            .description {
+                font-size: clamp(0.8rem, 2.8vw, 0.95rem);
+                line-height: 1.45;
+                text-align: center;
+                max-width: min(320px, 85vw);
+            }
+
+            .cta-group {
+                display: flex;
+                justify-content: center;
+                width: 100%;
+            }
+
+            .primary-btn {
+                font-size: 0.85rem;
+                padding: 0.35rem 0.35rem 0.35rem 1.2rem;
+                gap: 0.9rem;
+            }
+
+            .plus-icon {
+                width: 32px;
+                height: 32px;
+                font-size: 1.2rem;
+            }
+
+            /* Center Section on Mobile: 3D Can */
+            .hero-center {
+                position: relative;
+                width: 100%;
+                height: clamp(260px, 38vh, 380px);
+                margin: -0.5rem 0;
+                z-index: 10;
+            }
+
+            .main-product-3d {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%) rotate(20deg);
+                width: clamp(250px, 75vw, 360px);
+                height: clamp(250px, 40vh, 380px);
+            }
+
+            /* Bottom Section on Mobile */
+            .hero-right {
+                padding: 0 0 0.5rem 0;
+                height: auto;
+                width: 100%;
+                max-width: 100%;
+                align-items: center;
+                text-align: center;
+                gap: 1.1rem;
+                z-index: 50;
+                pointer-events: auto;
+            }
+
+            .product-carousel {
+                align-items: center;
+                gap: 0.65rem;
+                width: 100%;
+            }
+
+            .carousel-cards {
+                justify-content: center;
+                gap: 0.75rem;
+            }
+
+            .card {
+                width: clamp(95px, 26vw, 120px);
+                padding: 0.65rem;
+                padding-top: 3.4rem;
+                border-radius: 20px;
+                gap: 0.5rem;
+            }
+
+            .card img {
+                width: clamp(85px, 24vw, 110px);
+                margin-top: -5.2rem;
+            }
+
+            .card-info {
+                font-size: 0.66rem;
+            }
+
+            .nav-arrow {
+                width: 32px;
+                height: 32px;
+                font-size: 0.85rem;
+            }
+
+            .side-title {
+                font-size: clamp(1.85rem, 7vw, 2.8rem);
+                line-height: 0.92;
+                text-align: center;
+                align-self: center;
+                margin-top: 0.25rem;
+                margin-bottom: 0.5rem;
+            }
+
+            /* Scaled decorative berries for mobile screens */
+            .b1 { width: 55px; height: 55px; top: 16%; left: 8%; }
+            .b2 { width: 45px; height: 45px; top: 48%; left: 6%; }
+            .b3 { width: 65px; height: 65px; top: 20%; left: 80%; }
+            .b4 { width: 50px; height: 50px; top: 42%; left: 82%; }
+            .b5 { width: 45px; height: 45px; top: 72%; left: 8%; }
+            .b6 { width: 55px; height: 55px; top: 74%; left: 80%; }
+            .b7 { width: 35px; height: 35px; top: 28%; left: 12%; }
+            .b8 { width: 32px; height: 32px; top: 62%; left: 85%; }
+            .b9 { width: 35px; height: 35px; top: 88%; left: 22%; }
+
+            /* Scaled leaves for mobile */
+            .l1 { width: 32px; height: 32px; top: 10%; left: 14%; }
+            .l2 { width: 55px; height: 55px; top: 34%; left: 84%; }
+            .l3 { width: 38px; height: 38px; top: 66%; left: 82%; }
+            .l4 { width: 45px; height: 45px; top: 84%; left: 12%; }
+        }
+
+        /* Extra Small Phones (<= 375px) */
+        @media (max-width: 375px) {
+            .main-title {
+                font-size: 2.2rem;
+            }
+
+            .side-title {
+                font-size: 1.85rem;
+            }
+
+            .card {
+                width: 88px;
+                padding-top: 3rem;
+            }
+
+            .card img {
+                width: 78px;
+                margin-top: -4.8rem;
+            }
+
+            .description {
+                font-size: 0.78rem;
             }
 
             .hero-center {
-                order: -1;
+                height: 240px;
             }
 
-            .main-title,
-            .side-title {
-                font-size: 5rem;
+            .main-product-3d {
+                width: 240px;
+                height: 240px;
+            }
+        }
+
+        /* Landscape & Short Screen Heights (< 650px) */
+        @media (max-height: 650px) {
+            body {
+                overflow-y: auto !important;
             }
 
-            .hero-right {
-                align-items: center;
-                text-align: center;
+            .hero {
+                height: auto !important;
+                min-height: 100dvh;
+                padding-top: 4.5rem;
+                padding-bottom: 2rem;
             }
 
-            .side-title {
-                align-self: center;
-                text-align: center;
+            .hero-content {
+                height: auto !important;
+                min-height: auto;
+            }
+
+            .main-product-3d {
+                position: absolute !important;
             }
         }
     </style>
@@ -649,13 +967,15 @@
     <div id="bubbles-container"></div>
 
     <header class="header">
-        <div class="logo">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <a href="#" class="logo">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
                 <path d="M12 8V16M8 12H16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
             </svg>
             <span>Soda</span>
-        </div>
+        </a>
+
+        <!-- Desktop Navigation -->
         <nav class="nav glass">
             <a href="#" class="nav-item active">Home</a>
             <a href="#" class="nav-item">Ingredients</a>
@@ -663,11 +983,43 @@
             <a href="#" class="nav-item">Eco</a>
             <a href="#" class="nav-item">Reviews</a>
         </nav>
+
         <button class="contact-btn">Contact Us</button>
+
+        <!-- Mobile Hamburger Button -->
+        <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
     </header>
+
+    <!-- Mobile Navigation Drawer -->
+    <div class="mobile-drawer" id="mobile-drawer">
+        <div class="drawer-header">
+            <div class="logo">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+                    <path d="M12 8V16M8 12H16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+                <span>Soda</span>
+            </div>
+            <button class="drawer-close-btn" id="drawer-close-btn" aria-label="Close menu">&times;</button>
+        </div>
+        <nav class="drawer-nav">
+            <a href="#" class="drawer-nav-item active">Home</a>
+            <a href="#" class="drawer-nav-item">Ingredients</a>
+            <a href="#" class="drawer-nav-item">Taste</a>
+            <a href="#" class="drawer-nav-item">Eco</a>
+            <a href="#" class="drawer-nav-item">Reviews</a>
+        </nav>
+        <button class="contact-btn drawer-contact-btn">Contact Us</button>
+    </div>
+    <div class="drawer-backdrop" id="drawer-backdrop"></div>
 
     <main class="hero">
         <div class="hero-content">
+            <!-- Background Leaves -->
             <div class="leaves-container">
                 <model-viewer class="leaf l1"
                     src="https://api.getlayers.ai/storage/v1/object/public/public/assets/soda-14ff8a788d/leaves.glb"
@@ -687,8 +1039,9 @@
                     camera-orbit="10deg 45deg 105%"></model-viewer>
             </div>
 
+            <!-- Left / Top Column -->
             <div class="hero-left">
-                <h1 class="main-title large-animation-1">
+                <h1 class="main-title">
                     <span class="outline">Pure</span><br>
                     Zero
                 </h1>
@@ -703,9 +1056,9 @@
                         <span class="plus-icon">+</span>
                     </button>
                 </div>
-
             </div>
 
+            <!-- Background Cherries -->
             <div class="berries-container-bg">
                 <model-viewer class="berry b7"
                     src="https://api.getlayers.ai/storage/v1/object/public/public/assets/soda-14ff8a788d/cherry.glb"
@@ -721,15 +1074,17 @@
                     camera-orbit="45deg 20deg 105%"></model-viewer>
             </div>
 
+            <!-- Center Product 3D Can -->
             <div class="hero-center">
                 <model-viewer id="product-model"
                     src="https://api.getlayers.ai/storage/v1/object/public/public/assets/soda-14ff8a788d/deit_soda2.glb"
-                    alt="Diet Soda 3D Model" camera-controls disable-zoom shadow-intensity="0"
+                    alt="Diet Soda 3D Model" disable-zoom shadow-intensity="0"
                     environment-image="neutral" exposure="1.5" interaction-prompt="none" camera-orbit="0deg 90deg 380%"
                     field-of-view="30deg" class="main-product-3d">
                 </model-viewer>
             </div>
 
+            <!-- Foreground Cherries -->
             <div class="berries-container">
                 <model-viewer class="berry b1"
                     src="https://api.getlayers.ai/storage/v1/object/public/public/assets/soda-14ff8a788d/cherry.glb"
@@ -757,20 +1112,21 @@
                     camera-orbit="80deg 75deg 105%"></model-viewer>
             </div>
 
+            <!-- Right / Bottom Column -->
             <div class="hero-right">
                 <div class="product-carousel">
                     <div class="carousel-cards">
-                        <div class="card active" data-flavor="classic">
+                        <div class="card active" data-flavor="classic" title="Select Diet Classic">
                             <img src="https://api.getlayers.ai/storage/v1/object/public/public/assets/soda-14ff8a788d/Green%20Soda.png"
-                                alt="Diet Classic">
+                                alt="Diet Classic" loading="eager">
                             <div class="card-info">
                                 <span>Diet Classic</span>
                                 <span>₹125</span>
                             </div>
                         </div>
-                        <div class="card" data-flavor="blue">
+                        <div class="card" data-flavor="blue" title="Select Zero Lime">
                             <img src="https://api.getlayers.ai/storage/v1/object/public/public/assets/soda-14ff8a788d/Blue%20Soda.png"
-                                alt="Zero Lime" style="filter: brightness(0.7);">
+                                alt="Zero Lime" style="filter: brightness(0.85);" loading="eager">
                             <div class="card-info">
                                 <span>Zero Lime</span>
                                 <span>₹125</span>
@@ -778,11 +1134,12 @@
                         </div>
                     </div>
                     <div class="carousel-nav">
-                        <button class="nav-arrow">←</button>
-                        <button class="nav-arrow">→</button>
+                        <button class="nav-arrow prev-arrow" aria-label="Previous flavor">←</button>
+                        <button class="nav-arrow next-arrow" aria-label="Next flavor">→</button>
                     </div>
                 </div>
-                <h2 class="side-title large-animation-1">
+
+                <h2 class="side-title">
                     <span class="outline">Refreshingly</span><br>
                     Clean
                 </h2>
@@ -790,14 +1147,8 @@
         </div>
     </main>
 
-    <svg style="position: absolute; width: 0; height: 0; opacity: 0; pointer-events: none;">
-        <filter id="frosted">
-            <feTurbulence type="fractalNoise" baseFrequency="0.0125" numOctaves="3" result="noise" />
-            <feDisplacementMap in="SourceGraphic" in2="noise" scale="80" xChannelSelector="R" yChannelSelector="G" />
-        </filter>
-    </svg>
-    <div style="display: none;">
-        <!-- Preload berry models to avoid lag during switch -->
+    <!-- Hidden preload models -->
+    <div style="display: none;" aria-hidden="true">
         <model-viewer
             src="https://api.getlayers.ai/storage/v1/object/public/public/assets/soda-14ff8a788d/blueberry.glb"></model-viewer>
         <model-viewer
@@ -811,10 +1162,38 @@
         const leavesBG = document.querySelector('.leaves-container');
         const allBerries = document.querySelectorAll('.berry');
         const cards = document.querySelectorAll('.card');
+        const prevArrow = document.querySelector('.prev-arrow');
+        const nextArrow = document.querySelector('.next-arrow');
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileDrawer = document.getElementById('mobile-drawer');
+        const drawerCloseBtn = document.getElementById('drawer-close-btn');
+        const drawerBackdrop = document.getElementById('drawer-backdrop');
+        const drawerNavItems = document.querySelectorAll('.drawer-nav-item');
+
         let isSwitching = false;
         let switchSpin = 0;
         let blueTexture = null;
         let greenTexture = null;
+
+        // Mobile drawer handlers
+        function openDrawer() {
+            if (mobileDrawer && drawerBackdrop) {
+                mobileDrawer.classList.add('open');
+                drawerBackdrop.classList.add('active');
+            }
+        }
+
+        function closeDrawer() {
+            if (mobileDrawer && drawerBackdrop) {
+                mobileDrawer.classList.remove('open');
+                drawerBackdrop.classList.remove('active');
+            }
+        }
+
+        if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', openDrawer);
+        if (drawerCloseBtn) drawerCloseBtn.addEventListener('click', closeDrawer);
+        if (drawerBackdrop) drawerBackdrop.addEventListener('click', closeDrawer);
+        drawerNavItems.forEach(item => item.addEventListener('click', closeDrawer));
 
         // Preload textures & Warm up shaders
         modelViewer.addEventListener('load', async () => {
@@ -822,30 +1201,89 @@
                 blueTexture = await modelViewer.createTexture('https://api.getlayers.ai/storage/v1/object/public/public/assets/soda-14ff8a788d/blue%20base%20color.jpg');
                 greenTexture = await modelViewer.createTexture('https://api.getlayers.ai/storage/v1/object/public/public/assets/soda-14ff8a788d/green%20base%20color.jpg');
 
-                // Shader Warm-up: Briefly apply textures to compile shaders
                 if (modelViewer.model) {
                     const material = modelViewer.model.materials[0];
-                    if (material && material.pbrMetallicRoughness.baseColorTexture) {
-                        // Apply blue
+                    if (material && material.pbrMetallicRoughness && material.pbrMetallicRoughness.baseColorTexture) {
                         material.pbrMetallicRoughness.baseColorTexture.setTexture(blueTexture);
                         await new Promise(r => requestAnimationFrame(r));
-                        // Apply green back
                         material.pbrMetallicRoughness.baseColorTexture.setTexture(greenTexture);
                     }
                 }
-            } catch (e) { console.error("Texture preload failed", e); }
+            } catch (e) {
+                console.error("Texture preload failed", e);
+            }
         });
 
+        // Flavor Switcher Helper
+        const flavors = ['classic', 'blue'];
+
+        function getActiveFlavor() {
+            const activeCard = document.querySelector('.card.active');
+            return activeCard ? activeCard.dataset.flavor : 'classic';
+        }
+
+        function selectFlavor(flavor) {
+            if (isSwitching) return;
+            const targetCard = document.querySelector(`.card[data-flavor="${flavor}"]`);
+            if (!targetCard || targetCard.classList.contains('active')) return;
+            cards.forEach(c => c.classList.remove('active'));
+            targetCard.classList.add('active');
+            switchFlavor(flavor);
+        }
+
+        function cycleFlavor(step = 1) {
+            if (isSwitching) return;
+            const current = getActiveFlavor();
+            const currIdx = flavors.indexOf(current);
+            const nextIdx = (currIdx + step + flavors.length) % flavors.length;
+            selectFlavor(flavors[nextIdx]);
+        }
+
+        // Wire up cards and arrows
         cards.forEach(card => {
             card.addEventListener('click', () => {
-                if (isSwitching) return;
-                cards.forEach(c => c.classList.remove('active'));
-                card.classList.add('active');
-                const flavor = card.dataset.flavor;
-                switchFlavor(flavor);
+                selectFlavor(card.dataset.flavor);
             });
         });
 
+        if (prevArrow) {
+            prevArrow.addEventListener('click', (e) => {
+                e.stopPropagation();
+                cycleFlavor(-1);
+            });
+        }
+
+        if (nextArrow) {
+            nextArrow.addEventListener('click', (e) => {
+                e.stopPropagation();
+                cycleFlavor(1);
+            });
+        }
+
+        // Mobile touch swipe on carousel
+        let touchStartX = 0;
+        let touchStartY = 0;
+        const carousel = document.querySelector('.product-carousel');
+        if (carousel) {
+            carousel.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+                touchStartY = e.changedTouches[0].screenY;
+            }, { passive: true });
+
+            carousel.addEventListener('touchend', (e) => {
+                const diffX = e.changedTouches[0].screenX - touchStartX;
+                const diffY = e.changedTouches[0].screenY - touchStartY;
+                if (Math.abs(diffX) > 40 && Math.abs(diffX) > Math.abs(diffY)) {
+                    if (diffX < 0) {
+                        cycleFlavor(1);
+                    } else {
+                        cycleFlavor(-1);
+                    }
+                }
+            }, { passive: true });
+        }
+
+        // Flavor switch animation
         async function switchFlavor(flavor) {
             if (isSwitching) return;
             isSwitching = true;
@@ -862,28 +1300,27 @@
                 '--bg-inner': targetColors.inner,
                 '--bg-mid': targetColors.mid,
                 '--bg-outer': targetColors.outer,
-                duration: 1.5,
+                duration: 1.4,
                 ease: 'power2.inOut'
             });
 
-            // 2. Can Spin Animation (Simple 360 spin + blur with back settle)
+            // 2. Can Spin Animation
             const spinObj = { val: 0, blur: 0 };
             gsap.to(spinObj, {
                 val: 360,
-                blur: 15,
-                duration: 0.6,
+                blur: 14,
+                duration: 0.55,
                 ease: "power2.in",
                 onUpdate: () => {
                     switchSpin = spinObj.val;
                     modelViewer.style.filter = `blur(${spinObj.blur}px)`;
                 },
                 onComplete: async () => {
-                    // SWAP at peak
                     if (flavor === 'blue') {
                         body.classList.add('blue-theme');
                         if (modelViewer.model && blueTexture) {
                             modelViewer.model.materials.forEach(material => {
-                                if (material.pbrMetallicRoughness.baseColorTexture) {
+                                if (material.pbrMetallicRoughness && material.pbrMetallicRoughness.baseColorTexture) {
                                     material.pbrMetallicRoughness.baseColorTexture.setTexture(blueTexture);
                                 }
                             });
@@ -892,7 +1329,7 @@
                         body.classList.remove('blue-theme');
                         if (modelViewer.model && greenTexture) {
                             modelViewer.model.materials.forEach(material => {
-                                if (material.pbrMetallicRoughness.baseColorTexture) {
+                                if (material.pbrMetallicRoughness && material.pbrMetallicRoughness.baseColorTexture) {
                                     material.pbrMetallicRoughness.baseColorTexture.setTexture(greenTexture);
                                 }
                             });
@@ -902,8 +1339,8 @@
                     gsap.to(spinObj, {
                         val: 720,
                         blur: 0,
-                        duration: 1.5,
-                        ease: "back.out(0.7)",
+                        duration: 1.3,
+                        ease: "back.out(0.75)",
                         onUpdate: () => {
                             switchSpin = spinObj.val;
                             modelViewer.style.filter = `blur(${spinObj.blur}px)`;
@@ -916,9 +1353,12 @@
                 }
             });
 
-            // 3. Berries "Hide & Reveal" with Dynamic Positioning
+            // 3. Berries Hide & Reveal Animation
             let completedBerries = 0;
-            berries.forEach((berry, i) => {
+            const isSmallScreen = window.innerWidth <= 991;
+            const berryScatterRange = isSmallScreen ? 100 : 180;
+
+            berries.forEach((berry) => {
                 const bW = berry.offsetWidth / 2;
                 const bH = berry.offsetHeight / 2;
                 const centerX = (window.innerWidth / 2 - berry.offsetLeft - bW);
@@ -928,9 +1368,8 @@
                 const currentBaseX = parseFloat(berry.dataset.baseX) || 0;
                 const currentBaseY = parseFloat(berry.dataset.baseY) || 0;
 
-                // New random target position - Increased range for visibility
-                const nextBaseX = (Math.random() - 0.5) * 200;
-                const nextBaseY = (Math.random() - 0.5) * 200;
+                const nextBaseX = (Math.random() - 0.5) * berryScatterRange;
+                const nextBaseY = (Math.random() - 0.5) * berryScatterRange;
 
                 gsap.set(berry, {
                     rotation: startAngle,
@@ -946,76 +1385,137 @@
                     rotation: startAngle + 45,
                     scale: 0.1,
                     opacity: 0,
-                    duration: 0.5,
+                    duration: 0.45,
                     ease: "power2.in",
                     onComplete: () => {
-                        berry.src = flavor === 'blue' ? 'https://api.getlayers.ai/storage/v1/object/public/public/assets/soda-14ff8a788d/blueberry.glb' : 'https://api.getlayers.ai/storage/v1/object/public/public/assets/soda-14ff8a788d/cherry.glb';
-                        heroCenter.style.zIndex = 50;
+                        berry.src = flavor === 'blue'
+                            ? 'https://api.getlayers.ai/storage/v1/object/public/public/assets/soda-14ff8a788d/blueberry.glb'
+                            : 'https://api.getlayers.ai/storage/v1/object/public/public/assets/soda-14ff8a788d/cherry.glb';
+                        heroCenter.style.zIndex = 40;
                     }
                 })
-                    .to(berry, {
-                        duration: 0.3
-                    })
-                    .to(berry, {
-                        onStart: () => {
-                            heroCenter.style.zIndex = 1;
-                        },
-                        x: nextBaseX,
-                        y: nextBaseY,
-                        rotation: startAngle + 90,
-                        scale: 1,
-                        opacity: 1,
-                        duration: 0.9,
-                        ease: "back.out(1.5)",
-                        onComplete: () => {
-                            berry.dataset.angle = startAngle + 90;
-                            berry.dataset.baseX = nextBaseX;
-                            berry.dataset.baseY = nextBaseY;
-                            berry.dataset.rx = 0;
-                            berry.dataset.ry = 0;
+                .to(berry, {
+                    duration: 0.25
+                })
+                .to(berry, {
+                    onStart: () => {
+                        heroCenter.style.zIndex = 10;
+                    },
+                    x: nextBaseX,
+                    y: nextBaseY,
+                    rotation: startAngle + 90,
+                    scale: 1,
+                    opacity: 1,
+                    duration: 0.85,
+                    ease: "back.out(1.5)",
+                    onComplete: () => {
+                        berry.dataset.angle = startAngle + 90;
+                        berry.dataset.baseX = nextBaseX;
+                        berry.dataset.baseY = nextBaseY;
+                        berry.dataset.rx = 0;
+                        berry.dataset.ry = 0;
 
-                            completedBerries++;
-                            if (completedBerries === berries.length) {
-                                isSwitching = false;
-                            }
+                        completedBerries++;
+                        if (completedBerries === berries.length) {
+                            isSwitching = false;
                         }
-                    });
+                    }
+                });
             });
         }
 
-        // Track berry states for smoothing
+        // Track berry states for physics
         allBerries.forEach(b => {
-            b.dataset.rx = 0; b.dataset.ry = 0; b.dataset.angle = Math.random() * 360;
-            b.dataset.baseX = 0; b.dataset.baseY = 0;
-            b.dataset.targetRx = 0; b.dataset.targetRy = 0;
+            b.dataset.rx = 0;
+            b.dataset.ry = 0;
+            b.dataset.angle = Math.random() * 360;
+            b.dataset.baseX = 0;
+            b.dataset.baseY = 0;
         });
 
-        let mouse = { x: 0, y: 0, px: 0, py: 0 };
+        // Multi-Input State: Mouse + Touch + Gyroscope + Ambient Drift
+        let mouse = { x: 0, y: 0, px: -9999, py: -9999 };
         let currentMouse = { x: 0, y: 0 };
+        let isTouching = false;
+        let touchTimeout = null;
+        let gyro = { x: 0, y: 0 };
+        let hasGyro = false;
 
+        // Mouse events
         window.addEventListener('mousemove', (e) => {
             mouse.x = (e.clientX / window.innerWidth) - 0.5;
             mouse.y = (e.clientY / window.innerHeight) - 0.5;
             mouse.px = e.clientX;
             mouse.py = e.clientY;
-        });
+            isTouching = false;
+        }, { passive: true });
 
+        // Touch events for all mobile / tablet sizes
+        function updateTouch(e) {
+            if (!e.touches || e.touches.length === 0) return;
+            const touch = e.touches[0];
+            mouse.x = (touch.clientX / window.innerWidth) - 0.5;
+            mouse.y = (touch.clientY / window.innerHeight) - 0.5;
+            mouse.px = touch.clientX;
+            mouse.py = touch.clientY;
+            isTouching = true;
+            clearTimeout(touchTimeout);
+        }
+
+        window.addEventListener('touchstart', updateTouch, { passive: true });
+        window.addEventListener('touchmove', updateTouch, { passive: true });
+        window.addEventListener('touchend', () => {
+            touchTimeout = setTimeout(() => {
+                isTouching = false;
+                mouse.px = -9999;
+                mouse.py = -9999;
+                gsap.to(mouse, { x: 0, y: 0, duration: 1.2, ease: "power2.out" });
+            }, 800);
+        }, { passive: true });
+
+        // Device Orientation for mobile devices (physical tilt effect)
+        window.addEventListener('deviceorientation', (e) => {
+            if (e.gamma === null || e.beta === null) return;
+            hasGyro = true;
+            const clampedGamma = Math.max(-40, Math.min(40, e.gamma));
+            const clampedBeta = Math.max(15, Math.min(75, e.beta)) - 45;
+            gyro.x = (clampedGamma / 40) * 0.45;
+            gyro.y = (clampedBeta / 30) * 0.35;
+        }, { passive: true });
+
+        // Main Animation Loop (60 - 120 FPS hardware accelerated)
         function animate() {
             const time = Date.now() * 0.001;
-            // Target camera position based on mouse
-            // Smoothly interpolate current mouse to target mouse
-            currentMouse.x += (mouse.x - currentMouse.x) * 0.05;
-            currentMouse.y += (mouse.y - currentMouse.y) * 0.05;
 
-            // Tilt the product can + add switch spin
-            modelViewer.cameraOrbit = `${(currentMouse.x * 40) + switchSpin}deg ${90 + (currentMouse.y * 20)}deg 380%`;
+            // Ambient gentle floating drift
+            const idleX = Math.sin(time * 0.9) * 0.04;
+            const idleY = Math.cos(time * 0.7) * 0.03;
 
-            // Update parallax containers - Always
-            berriesFG.style.transform = `translate(${currentMouse.x * 60}px, ${currentMouse.y * 60}px)`;
-            berriesBG.style.transform = `translate(${currentMouse.x * -30}px, ${currentMouse.y * -30}px)`;
-            leavesBG.style.transform = `translate(${currentMouse.x * -15}px, ${currentMouse.y * -15}px)`;
+            let targetX = mouse.x + idleX;
+            let targetY = mouse.y + idleY;
 
-            // Update each berry with its own smoothing and float - ONLY IF NOT SWITCHING
+            if (hasGyro && !isTouching) {
+                targetX += gyro.x * 0.5;
+                targetY += gyro.y * 0.4;
+            }
+
+            // Smooth interpolation
+            currentMouse.x += (targetX - currentMouse.x) * 0.06;
+            currentMouse.y += (targetY - currentMouse.y) * 0.06;
+
+            // Camera tilt + flavor switch spin
+            const targetOrbit = `${(currentMouse.x * 38) + switchSpin}deg ${90 + (currentMouse.y * 18)}deg 380%`;
+            modelViewer.cameraOrbit = targetOrbit;
+
+            // Update parallax containers using translate3d
+            berriesFG.style.transform = `translate3d(${currentMouse.x * 45}px, ${currentMouse.y * 45}px, 0)`;
+            berriesBG.style.transform = `translate3d(${currentMouse.x * -25}px, ${currentMouse.y * -25}px, 0)`;
+            leavesBG.style.transform = `translate3d(${currentMouse.x * -15}px, ${currentMouse.y * -15}px, 0)`;
+
+            // Responsive berry repulsion radius
+            const repulsionRadius = Math.min(window.innerWidth * 0.35, 300);
+
+            // Update berries with physics & floating
             if (!isSwitching) {
                 allBerries.forEach((berry, i) => {
                     const berryRect = berry.getBoundingClientRect();
@@ -1028,14 +1528,13 @@
 
                     let targetRx = 0, targetRy = 0, speedMult = 1;
 
-                    if (distance < 400) {
-                        const force = (400 - distance) / 400;
-                        targetRx = (diffX / distance) * force * -80;
-                        targetRy = (diffY / distance) * force * -80;
-                        speedMult = 1 + force * 5;
+                    if (distance < repulsionRadius && distance > 0) {
+                        const force = (repulsionRadius - distance) / repulsionRadius;
+                        targetRx = (diffX / distance) * force * -55;
+                        targetRy = (diffY / distance) * force * -55;
+                        speedMult = 1 + force * 3.5;
                     }
 
-                    // Lerp repulsion values
                     let rx = parseFloat(berry.dataset.rx) || 0;
                     let ry = parseFloat(berry.dataset.ry) || 0;
                     let angle = parseFloat(berry.dataset.angle) || 0;
@@ -1050,24 +1549,23 @@
                     berry.dataset.ry = ry;
                     berry.dataset.angle = angle;
 
-                    // Floating effect
                     const dur = [5, 7, 6, 8, 5.5, 6.5, 9, 11, 10][i % 9];
                     const phase = (time + i * 0.7) * (Math.PI * 2 / dur);
-                    const floatY = Math.sin(phase) * 15;
-                    const floatAngle = Math.cos(phase) * 6;
+                    const floatY = Math.sin(phase) * 12;
+                    const floatAngle = Math.cos(phase) * 5;
 
-                    berry.style.transform = `translate(calc(${rx + baseX}px), calc(${ry + baseY}px + ${floatY}px)) rotate(calc(${angle}deg + ${floatAngle}deg))`;
+                    berry.style.transform = `translate3d(calc(${rx + baseX}px), calc(${ry + baseY}px + ${floatY}px), 0) rotate(calc(${angle}deg + ${floatAngle}deg))`;
                 });
             }
 
-            // Update leaves with float - ALWAYS
+            // Floating leaves animation
             document.querySelectorAll('.leaf').forEach((leaf, i) => {
                 const dur = 10 + i * 2;
                 const phase = (time + i * 1.2) * (Math.PI * 2 / dur);
-                const floatY = Math.sin(phase) * 20;
-                const floatX = Math.cos(phase * 0.5) * 15;
-                const floatAngle = Math.sin(phase * 0.3) * 15;
-                leaf.style.transform = `translate(${floatX}px, ${floatY}px) rotate(${floatAngle}deg)`;
+                const floatY = Math.sin(phase) * 14;
+                const floatX = Math.cos(phase * 0.5) * 10;
+                const floatAngle = Math.sin(phase * 0.3) * 10;
+                leaf.style.transform = `translate3d(${floatX}px, ${floatY}px, 0) rotate(${floatAngle}deg)`;
             });
 
             requestAnimationFrame(animate);
@@ -1075,18 +1573,18 @@
 
         animate();
 
-        // Bubbles Generator using bubble.png
+        // Optimized Bubbles Generator
         const bubblesContainer = document.getElementById('bubbles-container');
         function createBubble() {
             if (!bubblesContainer) return;
             const bubble = document.createElement('img');
             bubble.src = 'https://api.getlayers.ai/storage/v1/object/public/public/assets/soda-14ff8a788d/bubble.png';
             bubble.className = 'bubble-img';
-            const size = Math.random() * 20 + 10 + 'px';
+            const size = Math.random() * 18 + 10 + 'px';
             bubble.style.width = size;
             bubble.style.height = 'auto';
             bubble.style.left = Math.random() * 100 + '%';
-            bubble.style.bottom = '-50px';
+            bubble.style.bottom = '-40px';
             bubble.style.opacity = Math.random() * 0.4 + 0.2;
 
             const duration = Math.random() * 6 + 4;
@@ -1095,7 +1593,9 @@
             bubblesContainer.appendChild(bubble);
             setTimeout(() => bubble.remove(), duration * 1000);
         }
-        setInterval(createBubble, 400);
+
+        const bubbleInterval = window.innerWidth <= 991 ? 600 : 400;
+        setInterval(createBubble, bubbleInterval);
     </script>
 </body>
 
